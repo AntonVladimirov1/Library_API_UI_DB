@@ -30,10 +30,7 @@ public class DB_Util {
         } catch (Exception e) {
             System.out.println("CONNECTION HAS FAILED " + e.getMessage() );
         }
-
     }
-
-
     /**
      * Create connection method , just checking one connection successful or not
      */
@@ -366,8 +363,6 @@ public class DB_Util {
         }finally {
             resetCursor();
         }
-
-
         return rowMap ;
     }
     /**
@@ -386,12 +381,31 @@ public class DB_Util {
 
             Map<String,Object> rowMap = getRowMap(rowIndex);
             allRowLstOfMap.add( rowMap ) ;
-
         }
         resetCursor();
 
         return allRowLstOfMap ;
+    }
 
+
+    public static List<List<Object>> getQueryResultList(String query) {
+        runQuery(query);
+        List<List<Object>> rowList = new ArrayList<>();
+        ResultSetMetaData rsmd;
+        try {
+            rsmd = rs.getMetaData();
+            while (rs.next()) {
+                List<Object> row = new ArrayList<>();
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    row.add(rs.getObject(i));
+                }
+                rowList.add(row);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return rowList;
     }
 
 
